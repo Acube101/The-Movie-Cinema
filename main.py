@@ -117,7 +117,13 @@ def recommend():
 
     if(imdb_id != ""):
         # web scraping to get user reviews from IMDB site
-        sauce = urllib.request.urlopen('https://www.imdb.com/title/{}/reviews?ref_=tt_ov_rt'.format(imdb_id)).read()
+        # Adding headers to make the request look like it's coming from a browser
+        url = 'https://www.imdb.com/title/{}/reviews?ref_=tt_ov_rt'.format(imdb_id)
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+    
+        # Create a request with headers
+        req = urllib.request.Request(url, headers=headers)
+        sauce = urllib.request.urlopen(req).read()
         soup = bs.BeautifulSoup(sauce,'lxml')
         soup_result = soup.find_all("div",{"class":"text show-more__control"})
 
